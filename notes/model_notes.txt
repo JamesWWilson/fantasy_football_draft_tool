@@ -1,0 +1,12 @@
+
+# Feature Engineering Questions
+-What kind of personelle are teams running?
+-Does a RB break tackles or because he has a good offensive line?
+-Who is most important player in an OL and how will they opperate if he is out?
+-Does a defense play a lot of cover 3? 2? 1?
+
+
+
+
+
+

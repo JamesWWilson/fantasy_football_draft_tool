@@ -1,0 +1,9 @@
+## INSTALLS
+#install.packages('googlesheets4')
+#install.packages(c("devtools","rstudioapi"),dependencies=TRUE,repos=c("http://rstudio.org/_packages", "http://cran.rstudio.com"))
+## Sometimes need to detach openxlsx to get it to work
+#detach("package:openxlsx", unload=TRUE)
+#install.packages("openxlsx")
+
+
+

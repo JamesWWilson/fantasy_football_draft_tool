@@ -9,19 +9,19 @@
 # season_choice = 2023
 
 # # AUSTIN PKP 
-# scoring_summary = "Half-PPR" #Accepted: "Standard", "Half-PPR", "PPR"
-# team_count = 10 # Any number - used for determining possible draft round they go 
-# league_name = "PKP" #PKP / Sleeper / Uncle_Jim
-# positions = c("QB", "RB", "WR", "TE", "K", "DST")
-# season_choice = 2023
-# 
-# 
-# # UNCLE JIM  
-scoring_summary = "PPR" #Accepted: "Standard", "Half-PPR", "PPR"
+scoring_summary = "Half-PPR" #Accepted: "Standard", "Half-PPR", "PPR"
 team_count = 10 # Any number - used for determining possible draft round they go
-league_name = "Uncle_Jim" #PKP / Sleeper / Uncle_Jim
+league_name = "PKP" #PKP / Sleeper / Uncle_Jim
 positions = c("QB", "RB", "WR", "TE", "K", "DST")
 season_choice = 2023
+
+
+# # UNCLE JIM  
+# scoring_summary = "PPR" #Accepted: "Standard", "Half-PPR", "PPR"
+# team_count = 10 # Any number - used for determining possible draft round they go
+# league_name = "Uncle_Jim" #PKP / Sleeper / Uncle_Jim
+# positions = c("QB", "RB", "WR", "TE", "K", "DST")
+# season_choice = 2023
 
 
 

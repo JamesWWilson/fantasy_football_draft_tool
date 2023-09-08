@@ -27,7 +27,7 @@ source("set_points.r")
 
 # Fantasy Football Rankings Scraped with ffanalytics package
 main_roster_scrape <- scrape_data(pos = positions, season = season_choice, week = 0)
-main_projections <- projections_table(main_roster_scrape, scoring_rules = sleeper_league_half_ppr_points)
+main_projections <- projections_table(main_roster_scrape, scoring_rules = yahoo_pkp_standard_points) #change scoring based on league
 
 main_projections <- main_projections %>% 
   add_ecr() %>% 
@@ -137,8 +137,8 @@ bchen_data %>% filter(!(bc_rank %in% matched_projections$bc_rank)) # should be e
 # Fantasy Pros Tiers, Notes, and Personal Notes ---------------------------
 # https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php
 #load sources
-# fantasypros_data <- read_csv("../data/2023/FantasyPros_2023_Draft_ALL_Rankings_HalfPPR.csv") #half-ppr
-fantasypros_data <- read_csv("../data/2023/FantasyPros_2023_Draft_OP_Rankings_SuperFlex.csv") #superflex
+fantasypros_data <- read_csv("../data/2023/FantasyPros_2023_Draft_ALL_Rankings_HalfPPR.csv") #half-ppr
+# fantasypros_data <- read_csv("../data/2023/FantasyPros_2023_Draft_OP_Rankings_SuperFlex.csv") #superflex
 # fantasypros_data <- read_csv("../data/2023/FantasyPros_2023_Draft_OP_Rankings_Standard.csv") #standard
 
 

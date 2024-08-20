@@ -13,7 +13,7 @@ scoring_summary = "Half-PPR" #Accepted: "Standard", "Half-PPR", "PPR"
 team_count = 14 # Any number - used for determining possible draft round they go
 league_name = "Sleeper" #PKP / Sleeper / Uncle_Jim
 positions = c("QB", "RB", "WR", "TE", "K", "DST")
-season_choice = 2024
+season_choice = 20240
 
 
 # # UNCLE JIM  

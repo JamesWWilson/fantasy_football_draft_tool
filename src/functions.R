@@ -51,7 +51,7 @@ scrape_ffanalytics <-function(config){
   main_projections <- main_projections %>%
       add_ecr() %>%
       add_adp() %>%
-      add_aav() %>%
+      # add_aav() %>% # scrape error in 2024
       add_uncertainty() %>%
       add_player_info() %>%
       filter(avg_type =='weighted') # going with weighted average calculation
@@ -178,22 +178,46 @@ manual_PlayerNotes <- function(config){
     select(id, JW_Notes)
 } 
 
-# Merge Projections 
-merge_all_projections <- function(main_projections, bchen_data, fantasypros_data, manual_player_notes){
-  # Merge main_projections and boris chen 
-  matched_projections <- merge_projections(main_projections, bchen_data, c("first_name","last_name"))# Load and process Fantasy Pros data
-  # Merge Fantasy Pros data
-  matched_projections <- merge_projections(matched_projections, fantasypros_data,c("first_name","last_name"))# Load and merge personal notes
-  # Merge Player Notes 
-  matched_projections <- merge_projections(matched_projections, manual_player_notes, c("id")) 
-  
-  return(matched_projections)
 
-}
+# # Merge Projections 
+# merge_all_projections <- function(main_projections, bchen_data, fantasypros_data, manual_player_notes, drop_BC = FALSE){
+#   
+#   # Merge main_projections and boris chen 
+#   if(drop_BC){
+#     matched_projections <- main_projections
+#   }else{
+#     matched_projections <- merge_projections(main_projections, bchen_data, c("first_name","last_name"))# Load and process Fantasy Pros data
+#     
+#   }
+#   # Merge Fantasy Pros data
+#   matched_projections <- merge_projections(matched_projections, fantasypros_data,c("first_name","last_name"))# Load and merge personal notes
+#   # Merge Player Notes 
+#   matched_projections <- merge_projections(matched_projections, manual_player_notes, c("id")) 
+#   
+#   return(matched_projections)
+# 
+# }
 
 
 
 # Function to generate the output file
+
+# generate_output <-function(df, config){
+#   
+#   output_path <- paste0("../output/", 
+#                         Sys.Date(),"-", 
+#                         config$scoring_summary,"-", 
+#                         config$league_name,"-Model-Results.xlsx")
+#   
+#   wb <- createWorkbook()
+#   modifyBaseFont(wb, fontSize =12, fontName ="Futura")
+#   addWorksheet(wb,"model_output", gridLines =FALSE)
+#   writeData(wb, sheet =1, x = df, colNames =TRUE, rowNames =FALSE)# Add conditional formatting as required# ...
+#   
+#   saveWorkbook(wb, output_path, overwrite =TRUE)
+#   message("Output saved to: ", output_path)
+#   
+# }
 
 generate_output <-function(df, config){
   
@@ -204,13 +228,41 @@ generate_output <-function(df, config){
   
   wb <- createWorkbook()
   modifyBaseFont(wb, fontSize =12, fontName ="Futura")
-  addWorksheet(wb,"model_output", gridLines =FALSE)
-  writeData(wb, sheet =1, x = df, colNames =TRUE, rowNames =FALSE)# Add conditional formatting as required# ...
   
+  addWorksheet(wb,"model_output", gridLines =FALSE)# Ensure all columns in df are of a compatible type
+  df <- as.data.frame(df)# Write data
+  writeData(wb, sheet =1, x = df, colNames =TRUE, rowNames =FALSE)# Freeze the first row and column
+  freezePane(wb, sheet =1, firstRow =TRUE, firstCol =TRUE)# Add a filter to the first row
+  addFilter(wb,1, row =1, cols =1:ncol(df))# Set the column width for specific columns
+  setColWidths(wb, sheet =1, cols ="O", widths =51)# Conditional formatting based on position
+  RB_Style <- createStyle(bgFill ="#FF9900")
+  WR_Style <- createStyle(bgFill ="#00CCFF")
+  TE_Style <- createStyle(bgFill ="#99CC00")
+  QB_Style <- createStyle(bgFill ="#FFCC00")
+  K_Style <- createStyle(bgFill ="#CC99FF")
+  DST_Style <- createStyle(bgFill ="#808080")
+  
+  conditionalFormatting(wb,"model_output", cols =5, rows =1:nrow(df), type ="contains", rule ="RB", style = RB_Style)
+  conditionalFormatting(wb,"model_output", cols =5, rows =1:nrow(df), type ="contains", rule ="WR", style = WR_Style)
+  conditionalFormatting(wb,"model_output", cols =5, rows =1:nrow(df), type ="contains", rule ="TE", style = TE_Style)
+  conditionalFormatting(wb,"model_output", cols =5, rows =1:nrow(df), type ="contains", rule ="QB", style = QB_Style)
+  conditionalFormatting(wb,"model_output", cols =5, rows =1:nrow(df), type ="contains", rule ="K", style = K_Style)
+  conditionalFormatting(wb,"model_output", cols =5, rows =1:nrow(df), type ="contains", rule ="DST", style = DST_Style)# Conditional formatting based on master_tier (even/odd styling)
+  unique_numbers <- unique(na.omit(df$master_tier))
+  even_style <- createStyle(bgFill ="#0072BB")
+  odd_style <- createStyle(bgFill ="#4CAF50")
+  for(i in 1:length(unique_numbers)){
+    number <- unique_numbers[i]
+    choose_style <- ifelse(as.numeric(number)%%2==0, even_style, odd_style)
+    
+    conditionalFormatting(wb,"model_output",
+                          cols =6, rows =1:nrow(df), type ="contains", rule =as.character(number),
+                          style = choose_style)}# Add color scales to certain columns
+  cols_to_scale <- 7:14
+  for(col in cols_to_scale){
+    conditionalFormatting(wb,"model_output",
+                          cols = col, rows =1:nrow(df),
+                          style =c("green","yellow","red"),
+                          type ="colourScale")}# Save the workbook
   saveWorkbook(wb, output_path, overwrite =TRUE)
-  message("Output saved to: ", output_path)
-  
-}
-
-
-
+  message("Output saved to: ", output_path)}

@@ -1,7 +1,7 @@
 
 # Notes: Start of season make sure to re-build package for updates on scrapers 
 # require("remotes")
-remotes::install_github("FantasyFootballAnalytics/ffanalytics")
+# remotes::install_github("FantasyFootballAnalytics/ffanalytics")
 
 # Load necessary libraries
 require("ffanalytics")
